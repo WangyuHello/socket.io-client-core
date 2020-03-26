@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <Description>High-performance C# client for socket.io using Rx.Net.</Description>
+    <!-- <Description>High-performance C# client for socket.io using Rx.Net.</Description>
     <Authors>Ladislav Böhm</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Copyright></Copyright>
@@ -15,11 +15,12 @@
     <AssemblyVersion>1.0.2.0</AssemblyVersion>
     <FileVersion>1.0.2.0</FileVersion>
     <Version>1.0.2</Version>
-    <PackageReleaseNotes>handles more packet types</PackageReleaseNotes>
+    <PackageReleaseNotes>handles more packet types</PackageReleaseNotes> -->
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="System.Reactive" Version="4.3.2" />
     <PackageReference Include="Utf8Json" Version="1.3.7" />
     <PackageReference Include="Websocket.Client" Version="4.2.3" />

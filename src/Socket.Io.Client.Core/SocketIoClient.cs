@@ -19,6 +19,7 @@ using Socket.Io.Client.Core.Parse;
 using Socket.Io.Client.Core.Processing;
 using Socket.Io.Client.Core.Extensions;
 using Websocket.Client;
+using Newtonsoft.Json.Linq;
 
 namespace Socket.Io.Client.Core
 {
@@ -135,9 +136,9 @@ namespace Socket.Io.Client.Core
             }
         }
 
-        public IObservable<AckMessageEvent> Emit(string eventName) => Emit<object>(eventName, null);
+        public IObservable<AckMessageEvent> Emit(string eventName) => Emit(eventName, null);
 
-        public IObservable<AckMessageEvent> Emit<TData>(string eventName, TData data)
+        public IObservable<AckMessageEvent> Emit(string eventName, object data)
         {
             ThrowIfInvalidEvent(eventName);
             ThrowIfNotRunning();
@@ -151,7 +152,20 @@ namespace Socket.Io.Client.Core
             if (data != null)
             {
                 sb.Append(",");
-                sb.Append(Json.Serialize(data));
+
+                if (data is string)
+                {
+                    sb.Append(data);
+                }
+                else if (data is JToken)
+                {
+                    sb.Append(data.ToString());
+                }
+                else
+                {
+                    sb.Append(Json.Serialize(data));
+                }
+                
             }
 
             sb.Append("]");
@@ -161,6 +175,23 @@ namespace Socket.Io.Client.Core
             
             Send(packet);
             return result;
+        }
+
+        public IObservable<AckMessageEvent> Emit(string eventName, params object[] data)
+        {
+            List<string> jobjs = new List<string>();
+            foreach (var item in data)
+            {
+                if (item is JToken)
+                {
+                    jobjs.Add(item.ToString());
+                }
+                else
+                {
+                    jobjs.Add(Json.Serialize(item));
+                }
+            }
+            return Emit(eventName, string.Join(",", jobjs));
         }
 
         public IObservable<EventMessageEvent> On(string eventName)

@@ -5,9 +5,10 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Socket.Io.Client.Core.Model.SocketEvent;
 using Socket.Io.Client.Core.Model.SocketIo;
-using Utf8Json;
+//using Utf8Json;
 
 namespace Socket.Io.Client.Core.Processing
 {
@@ -58,7 +59,8 @@ namespace Socket.Io.Client.Core.Processing
         {
             try
             {
-                var eventArray = JsonSerializer.Deserialize<string[]>(packet.Data);
+                //var eventArray = JsonSerializer.Deserialize<string[]>(packet.Data);
+                var eventArray = JsonConvert.DeserializeObject<string[]>(packet.Data, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore});
                 if (eventArray != null && eventArray.Length > 0)
                 {
                     if (packet.Id.HasValue && _logger.IsEnabled(LogLevel.Debug))
@@ -79,7 +81,8 @@ namespace Socket.Io.Client.Core.Processing
                     }
                 }
             }
-            catch (JsonParsingException ex)
+            //catch (JsonParsingException ex)
+            catch (JsonException ex)
             {
                 _logger.LogError(ex, $"Error while deserializing event message. Packet: {packet}");
                 _client.Events.ErrorSubject.OnNext(new ErrorEvent(ex, "Error while deserializing event message"));

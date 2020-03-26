@@ -15,7 +15,8 @@ namespace Socket.Io.Client.Core
         Task CloseAsync();
 
         IObservable<AckMessageEvent> Emit(string eventName);
-        IObservable<AckMessageEvent> Emit<TData>(string eventName, TData data);
+        IObservable<AckMessageEvent> Emit(string eventName, object data);
+        IObservable<AckMessageEvent> Emit(string eventName, params object[] data);
 
         IObservable<EventMessageEvent> On(string eventName);
     }
